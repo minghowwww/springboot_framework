@@ -1,0 +1,9 @@
+.content-wrapper section h1 {
+    margin-left: auto;
+    /*border: 1px solid blue;*/
+    text-align: center;
+    margin-top: 300px;
+}
+.content-wrapper section {
+    height: 100%;
+}

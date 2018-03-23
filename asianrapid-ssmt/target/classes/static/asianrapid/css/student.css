@@ -1,0 +1,9 @@
+/*校验信息的样式*/
+.help-block .valiInfo {
+    color: red;
+    /* 		border: 1px solid red; */
+    position: relative;
+    left: 180px;
+    top: 10px;
+}
+

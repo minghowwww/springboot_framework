@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <div th:replace="~{style :: sheet}"></div>
+    <!--<link rel="stylesheet" th:href="@{../static/asianrapid/css/home.css}" type="text/css">-->
+    <script type="text/javascript" th:src="@{../static/asianrapid/js/controllers/studentController.js}"></script>
+    <link rel="stylesheet" th:href="@{../static/asianrapid/css/student.css}" type="text/css">
+    <title>殡葬管理系统</title>
+</head>
+<body class="hold-transition skin-blue sidebar-mini"  ng-app="studentApp" ng-controller="stuController">
+<div class="wrapper">
+    <div th:replace="~{header :: nav}"></div>
+    <div th:replace="~{menu :: copy}"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                demo学生管理
+            </h1>
+        </section>
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">&nbsp;&nbsp;查询条件</h3>
+                            </div><!-- /.box-header -->
+                            <!-- form start -->
+                            <form class="form-horizontal">
+                                <div class="box-body">
+                                    <div class="col-xs-3">
+                                        <div class="form-group">
+                                            <label for="1" class="form-inline"
+                                                   style="display:inline-block;" >&nbsp;&nbsp;&nbsp;学生姓名&#12288;
+                                                <input class="form-control" style="width: 175px;
+                                                padding: 2px 0 ;border-radius: 5px; font-weight: normal;
+                                                vertical-align:middle;" type="text" id="1"name="name"
+                                                ng-model="searchName">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class="form-group">
+                                            <label for="3" class="form-inline">成绩&#12288;
+                                                <select class="form-control"
+                                                        style="width: 175px; padding: 2px 0;
+                                                        border-radius: 5px; font-weight: normal;
+                                                        vertical-align:middle;"  id="3"
+                                                name="score" ng-model="searchScore">
+                                                    <option value="A">A等级</option>
+                                                    <option value="B">B等级</option>
+                                                    <option value="C">C等级</option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <button type="submit" class="btn btn-default" style="float:right; width: 65px" ng-click="searchStus()">查询</button>
+                                    </div>
+                                </div><!-- /.box-body -->
+                            </form>
+                        </div>
+                        <div class="box-body">
+                            &#12288;<button class="btn btn-info"
+                                            data-toggle="modal"
+                                            data-target="#mymodal-data"
+                                            data-whatever="@mdo"
+                                            style="border-radius: 5px; float:left; width: 65px; margin-top: -20px;" ng-click="showInsertDialog()">新增</button>
+                            <!-- table start -->
+
+                            <div class="row-fluid ">
+
+                                <table class="table" id="dataShow">
+                                    <thead>
+                                    <tr>
+                                        <th data-field="stuId">id</th>
+                                        <th data-field="name">学生姓名</th>
+                                        <th data-field="age">年龄</th>
+                                        <th data-field="school">毕业院校</th>
+                                        <th data-field="score">成绩</th>
+                                        <th data-field="comment">备注</th>
+                                        <th data-formatter="AsianRapid.operateFormatter">操作</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div><!-- /.box-body -->
+                    </div><!-- /.box -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </section>
+    </div>
+    <div th:replace="~{footer :: foot}"></div>
+    <!--insetr调用的模态框 -->
+    <div class="modal fade" id="myModal"
+         tabindex="-1"
+         role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+    style="margin-left: 230px;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="margin-left: -50px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">亚迅科技</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- form -->
+                    <form class="form-horizontal" id="insertForm" role="form">
+                        <fieldset>
+                            <div class="control-group form-group">
+                                <label class="control-label" for="focusedInput">姓名</label>
+                                <div class="controls">
+                                    <input class="input-xlarge focused form-control" name="name"
+                                           ng-model="studentInfo.name" id="focusedInput" type="text">
+                                </div>
+                            </div>
+                            <div class="control-group form-group">
+                                <label class="control-label" for="inputWarning">年龄</label>
+                                <div class="controls">
+                                    <input type="text" id="inputWarning" name="age"
+                                           ng-model="studentInfo.age">
+                                </div>
+                            </div>
+                            <div class="control-group form-group">
+                                <label class="control-label" for="inputError">毕业院校</label>
+                                <div class="controls">
+                                    <input type="text" id="inputError" name="school"
+                                           ng-model="studentInfo.school"/>
+                                </div>
+                            </div>
+                            <div class="control-group form-group">
+                                <label class="control-label" for="selectError">成绩</label>
+                                <div class="controls">
+                                    <select name="score" ng-model="studentInfo.score">
+                                        <option ng-repeat="item in scores" value="{{item.value}}">{{item.msg}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group form-group">
+                                <label class="control-label" for="textarea2">备注</label>
+                                <div class="controls">
+										<textarea  name="comment" id="textarea2"
+                                                   style="width:400px;height:150px;" ng-model="studentInfo.comment"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            id="resetBtn">关闭</button>
+                    <button type="button" class="btn btn-primary insert_btn"
+                            id="validateBtn" ng-click="insertStudent()">确定</button>
+                    <button type="button" class="btn btn-primary update_btn"
+                            id="validateBtn" ng-click="updateStudent()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 信息删除确认 -->
+    <div class="modal fade" id="delcfmModel">
+        <div class="modal-dialog">
+            <div class="modal-content message_align">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">提示信息</h4>
+                </div>
+                <div class="modal-body">
+                    <p>您确认要删除吗？</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="stuId" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <a onclick="idSubmit()" class="btn btn-success"
+                       data-dismiss="modal">确定</a>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <script type="text/javascript">
+        $(function() {
+            //初始化表格数据
+//            AsianRapid.searchInputSelector = "#searchKey";
+            AsianRapid.Table_Init("#dataShow", "#searchButton",
+                "../student/list", "stuId", "get", ".edit_btn", 'stuController',
+                '.delete_btn', '#stuId', '#delcfmModel');
+//            AsianRapid.changeInputValue("请输入姓名");
+
+        })
+
+    //删除调用angular controller方法
+    function idSubmit() {
+        //获取angularscope，实现普通js调用angular中的方法
+        var appElement = document.querySelector('[ng-controller=stuController]');
+        var $scope = angular.element(appElement).scope();
+        $scope.deleteStudent($('#stuId').val());
+    }
+
+    //表单校验
+    $('#insertForm').bootstrapValidator({
+//        feedbackIcons : {
+//            valid : 'glyphicon glyphicon-ok',
+//            invalid : 'glyphicon glyphicon-remove',
+//            validating : 'glyphicon glyphicon-refresh'
+//        },
+        fields : {
+            name : {
+                validators : {
+                    notEmpty : {
+                        message : '<b class="valiInfo">姓名不能为空</b>'
+                    },
+                    regexp : {//正则表达式
+                        regexp : /^[\u4E00-\u9FA5A-Za-z]+$/,
+                        message : '<b class="valiInfo">姓名格式不正确</b>'
+                    }
+                }
+            },
+            age : {
+                validators : {
+                    notEmpty : {
+                        message : '<b class="valiInfo">年龄不能为空</b>'
+                    },
+                    regexp : {//正则表达式
+                        regexp : /120|((1[0-1]|\d)?\d)/,
+                        message : '<b class="valiInfo">年龄格式不正确</b>'
+                    }
+                }
+            },
+            school : {
+                validators : {
+                    notEmpty : {
+                        message : '<b class="valiInfo">毕业院校不能为空</b>'
+                    },
+                    regexp : {//正则表达式
+                        regexp : /^[\u4E00-\u9FA5A-Za-z]+$/,
+                        message : '<b class="valiInfo">毕业院校格式不正确</b>'
+                    }
+                }
+            },
+            score : {
+                validators : {
+                    notEmpty : {
+                        message : '<b class="valiInfo">请选择一个成绩</b>'
+                    }
+                }
+            }
+        }
+    })
+</script>
+
+</div>
+</body>
+</html>
